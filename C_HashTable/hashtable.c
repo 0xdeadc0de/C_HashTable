@@ -46,10 +46,6 @@ static int hash(const char* key, int prime, int size)
 	int hash = 0;
 	for (int i = 0; i < n; i++)
 	{
-		// Prime's type range should be smaller than pow's return type
-		// Integer overflow could happen here is basically a modulus over ULONG_MAX
-		// As long as prime's type max < ULONG_MAX we're fine
-		// Because for all x, x mod prime is subset of x mod ULONG_MAX
 		hash += ((unsigned)pow(prime, i) % size) * (key[i] % size);
 		hash %= size;
 	}
@@ -61,7 +57,7 @@ static int doubleHash(const char* key, int size, int attempt)
 {
 	// We're hashing ASCII strings, which has an alphabet size of 128 
 	// We should choose a prime larger than that 151, 163 should do
-	const int firstHash	 = hash(key, 151, size);
+	const int firstHash  = hash(key, 151, size);
 	const int secondHash = hash(key, 163, size-1) + 1;
 
 	int finalHash = firstHash + attempt * secondHash;
@@ -77,7 +73,7 @@ static Item* allocItem(const char* key, const char* value)
 		return NULL;
 	}
 
-	item->key  = _strdup(key);
+	item->key   = _strdup(key);
 	item->value = _strdup(value);
 	
 	return item;
